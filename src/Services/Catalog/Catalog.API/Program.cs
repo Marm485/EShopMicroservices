@@ -1,4 +1,3 @@
-using Catalog.API.Products.CreateProduct;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +14,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Add services to the DI container
-
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+builder.Services.AddCarter();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -23,8 +26,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-var groupProducts = app.MapGroup("/products");
-
-groupProducts.MapCreateProductEndpoint();
+app.MapCarter();
 
 app.Run();
