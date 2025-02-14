@@ -1,3 +1,4 @@
+using BuildingBlocks.Behaviors;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +14,15 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+var assembly = typeof(Program).Assembly;
+
 // Add services to the DI container
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.RegisterServicesFromAssembly(assembly);
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
+builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddCarter();
 builder.Services.AddMarten(opts =>
 {
