@@ -1,4 +1,6 @@
 ﻿
+using Catalog.API.Products.CreateProduct;
+
 namespace Catalog.API.Products.UpdateProduct;
 
 public record UpdateProductCommand(
@@ -12,6 +14,22 @@ public record UpdateProductCommand(
 
 public record UpdateProductResult(Product Product);
 
+public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
+{
+    public UpdateProductCommandValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required");
+
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required")
+            .Length(2, 150).WithMessage("Name must be between 2 and 150 characters");
+
+        RuleFor(x => x.Price)
+            .GreaterThan(0).WithMessage("Price must be greater than 0.");
+    }
+}
+
 public class UpdateProductHandler(IDocumentSession session) : ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
     private readonly IDocumentSession _session = session;
@@ -22,7 +40,7 @@ public class UpdateProductHandler(IDocumentSession session) : ICommandHandler<Up
 
         if (product is null)
         {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(request.Id);
         }
 
         product.Name = request.Name;

@@ -19,13 +19,13 @@ public class UpdateProductEndpoint : ICarterModule
             try
             {
                 var result = await sender.Send(
-                new UpdateProductCommand(
-                    Id,
-                    request.Name,
-                    request.Category,
-                    request.Description,
-                    request.ImageFile,
-                    request.Price));
+                    new UpdateProductCommand(
+                        Id,
+                        request.Name,
+                        request.Category,
+                        request.Description,
+                        request.ImageFile,
+                        request.Price));
 
                 return Results.Ok(result);
             }
