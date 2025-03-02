@@ -4,3 +4,5 @@ global using Carter;
 global using MediatR;
 global using FluentValidation;
 global using BuildingBlocks.Behaviors;
+global using Marten;
+global using Basket.API.Exceptions;
