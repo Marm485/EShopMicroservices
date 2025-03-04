@@ -1,7 +1,8 @@
-
 namespace Basket.API.Basket.StoreBasket;
 
-public record StoreBasketCommand(ShoppingCart Cart) : ICommand;
+public record StoreBasketCommand(ShoppingCart Cart) : ICommand<StoreBasketCommandResult>;
+
+public record StoreBasketCommandResult(string UserName);
 
 public class StoreBasketCommandValidator : AbstractValidator<StoreBasketCommand>
 {
@@ -12,10 +13,15 @@ public class StoreBasketCommandValidator : AbstractValidator<StoreBasketCommand>
     }
 }
 
-public class StoreBasketHandler : ICommandHandler<StoreBasketCommand>
+public class StoreBasketHandler
+    (IBasketRepository basketRepository)
+    : ICommandHandler<StoreBasketCommand, StoreBasketCommandResult>
 {
-    public Task<Unit> Handle(StoreBasketCommand request, CancellationToken cancellationToken)
+    public async Task<StoreBasketCommandResult> Handle(StoreBasketCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await basketRepository.StoreBasketAsync(request.Cart, cancellationToken)
+            .ConfigureAwait(false);
+
+        return new StoreBasketCommandResult(request.Cart.UserName);
     }
 }

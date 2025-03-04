@@ -10,10 +10,15 @@ public class DeleteBasketCommandValidator : AbstractValidator<DeleteBasketComman
     }
 }
 
-public class DeleteBasketHandler : ICommandHandler<DeleteBasketCommand>
+public class DeleteBasketHandler
+    (IBasketRepository basketRepository) 
+    : ICommandHandler<DeleteBasketCommand>
 {
-    public Task<Unit> Handle(DeleteBasketCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteBasketCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await basketRepository.DeleteBasketAsync(request.UserName, cancellationToken)
+            .ConfigureAwait(false);
+
+        return Unit.Value;
     }
 }

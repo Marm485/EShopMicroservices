@@ -14,7 +14,7 @@ builder.Services.AddMarten(options => {
     options.Schema.For<ShoppingCart>().Identity(x => x.UserName);
 })
     .UseLightweightSessions();
-
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
